@@ -1,12 +1,15 @@
-import logo from './logo.svg';
+import logo from './logo.svg'
 import './App.css';
+import React from 'react'
+import { useNavigate } from 'react-router-dom';
 
 function App() {
+  const navigate = useNavigate();
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
+        <img src={logo} className="App-logo" alt="logo"/>
+        <p onClick={() => navigate('/login')}>
           Edit <code>src/App.js</code> and save to reload.
         </p>
         <a

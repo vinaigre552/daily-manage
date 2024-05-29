@@ -1,0 +1,49 @@
+.login-page{
+  display: flex;
+  height: 100vh;
+
+  .display{
+    text-align: center;
+    color:white;
+    background-color: rgb(26, 125, 224);
+    border-radius: 0 8px 8px 0;
+
+    .carousel-div {
+      overflow: hidden;
+    }
+    .carousel {
+      height: 200px;
+      color: rgb(219, 131, 15);
+      line-height: 160px;
+      top: 50%;
+      margin: 80% 2px;
+      width: calc(100% - 4px);
+      text-align: center;
+    }
+  }
+
+  .login-form{
+    text-align: center;
+    line-height: 120px;
+    background-color: #e9f1fa;
+    :global{
+      .ant-form-item-label{
+        margin-left: 30px;  
+      }
+    }
+    .login-div{
+      width: 60%;
+      background-color: white;
+      margin-left: 30%;
+      margin-top: 30%;
+      padding: 20px 5px;
+      text-align: center;
+      border-radius: 10px;
+      border: 1px solid rgba(122, 122, 122, 0.5);
+    }
+    .login-div:hover{
+      box-shadow: 5px 10px rgb(63, 152, 241);
+      border: 1px solid rgba(122, 122, 122, 0.8);
+    }
+  }
+}
