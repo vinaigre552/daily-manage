@@ -4,7 +4,7 @@ import './index.css'
 import reportWebVitals from './reportWebVitals'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Login from './pages/login'
-import App from './App'
+import PageLayout from './layout'
 import { Provider } from 'react-redux'
 import store from './store'
 
@@ -15,7 +15,7 @@ root.render(
       <Router>
         <Routes>
           <Route path="/login" element={<Login />} />
-          <Route path="/" element={<App />} />
+          <Route path="/*" element={<PageLayout />} />
         </Routes>
       </Router>
     </Provider>

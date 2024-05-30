@@ -2,7 +2,7 @@ import React from 'react'
 import type { FormProps } from 'antd'
 import { Button, Form, Input, Checkbox } from 'antd'
 import styles from './style/login.module.less'
-
+import { useNavigate } from 'react-router-dom'
 type FieldType = {
   username?: string
   password?: string
@@ -14,11 +14,12 @@ const defaultUser = {
   password: '12345',
   remember: true
 }
-const onLogin: FormProps<FieldType>['onFinish'] = (values) => {
-  console.log(values)
-}
 
 export default function LoginForm() {
+  const navigate = useNavigate()
+  const onLogin: FormProps<FieldType>['onFinish'] = () => {
+    navigate('/')
+  }
   return (
     <div className={styles['login-div']}>
       <Form name='login' initialValues={{...defaultUser}} labelCol= {{span: 20, offset: 1}} wrapperCol={{span: 20, offset: 2}} layout='vertical' onFinish={onLogin}>
