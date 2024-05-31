@@ -1,6 +1,7 @@
 export type IRoute = {
   name: string,
   key: string,
+  icon?: unknown,
   breadcrumb?: boolean,
   children?: IRoute[]
 }

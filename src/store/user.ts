@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 export const useInfo = createSlice({
   name: 'user',
@@ -7,11 +7,11 @@ export const useInfo = createSlice({
     name: 'admin'
   },
   reducers: {
-    isAdmin: state => {
-      state.id += 1
+    setUsername: (state, action: PayloadAction<string>) => {
+      state.name = action.payload
     }
   }
 })
 
-export const { isAdmin } = useInfo.actions
+export const { setUsername } = useInfo.actions
 export default useInfo.reducer

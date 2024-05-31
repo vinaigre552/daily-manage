@@ -1,18 +1,30 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Layout, Menu, theme } from 'antd'
 import { routes, IRoute } from './routes'
-const { Header, Sider, Content } = Layout
+const { Header, Sider, Content, Footer } = Layout
 import { Routes, Route, useNavigate } from 'react-router-dom'
 import { LazyImportComponent } from './utils/lazyload'
-// import Calendar from './pages/calendar'
+import UserDisplay from './components/user-display'
+import HeaderLine from './components/header-line'
+import styles from './layout.module.less'
+import { ReconciliationOutlined, CalendarOutlined, FundOutlined } from '@ant-design/icons'
+import './layout.css'
+
 interface menuItem {
   key: string
   label: string
 }
 interface menu extends menuItem {
   children?: menuItem[]
+  icon?: unknown
 }
 
+const icons = [
+  {icon: <ReconciliationOutlined />},
+  {icon: <CalendarOutlined/>},
+  {icon: <FundOutlined />}]
+
+// 根据route得到menuItem
 function getMenu(routes: IRoute[]) {
   const res = []
   function travel(route) {
@@ -31,8 +43,10 @@ function getMenu(routes: IRoute[]) {
       return menuItem
     }
   }
-  routes.forEach((route) => {
-    res.push(travel(route))
+  routes.forEach((route, index) => {
+    const menuitem = travel(route)
+    menuitem.icon = icons[index].icon
+    res.push(menuitem)
   })
   return res
 }
@@ -56,27 +70,37 @@ function getRoutes(routes: IRoute[]) {
   travel(routes)
   return res
 }
+
 function PageLayout() {
+  const [collapsed, setCollapsed] = useState(false)
   const {
     token: { colorBgContainer, borderRadiusLG }
   } = theme.useToken()
+  const navigate = useNavigate()
 
   const dealedRoutes = getRoutes(routes)
-  const navigate = useNavigate()
   const menu = getMenu(routes)
+
   function onClickMenuItem(e) {
     navigate(`${e.key}`)
   }
+
   return (
     <Layout>
-      <Sider style={{ height: '100vh' }}>
-        <Menu theme="dark" mode="inline" items={menu} onClick={onClickMenuItem}></Menu>
+      <Sider className={styles['layout']} width="20%" collapsible collapsed={collapsed} trigger={null}>
+        <div style={collapsed ? { padding: '10px' } : { padding: '20px'}}>
+          <UserDisplay />
+        </div>
+        <Menu theme="dark" className={styles['menu']} mode="inline" items={menu} onClick={onClickMenuItem}></Menu>
       </Sider>
+
       <Layout>
-        <Header style={{ padding: 0, background: colorBgContainer }}>这是标题栏</Header>
+        <Header style={{ padding: 0, background: colorBgContainer }}>
+          <HeaderLine routes={dealedRoutes} collapsed={collapsed} setCollapsed={setCollapsed} />
+        </Header>
         <Content
           style={{
-            margin: '24px 16px',
+            margin: '20px 16px',
             padding: 24,
             background: colorBgContainer,
             borderRadius: borderRadiusLG
@@ -96,6 +120,9 @@ function PageLayout() {
             />
           </Routes>
         </Content>
+        <Footer style={{ textAlign: 'center' }}>
+          Daily Management ©{new Date().getFullYear()} Created by LSW
+        </Footer>
       </Layout>
     </Layout>
   )
