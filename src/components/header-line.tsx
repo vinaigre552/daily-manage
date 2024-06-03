@@ -1,24 +1,20 @@
 import React from "react";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons'
 import { Breadcrumb, Button } from "antd";
+import styles from './styles/index.module.less'
 
-function getBreadcrumb(routes) {
-  return routes.map(
-    route => route.breadcrumbName = route.name
-  )
-}
 
 function HeaderLine(props) {
-  const {collapsed, setCollapsed} = props
-  const bread = getBreadcrumb(props.routes)
+  const {collapsed, setCollapsed, breadItems} = props
+
   return (
-    <div>
+    <div className={styles['header-position']}>
       <Button 
         type='text'
         icon={collapsed? <MenuFoldOutlined/> : <MenuUnfoldOutlined />}
         onClick={() => setCollapsed(!collapsed)}
       />
-      <Breadcrumb items={bread}/>
+      <Breadcrumb items={breadItems}/>
     </div>
   )
 }
