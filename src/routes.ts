@@ -4,6 +4,7 @@ export type IRoute = {
   icon?: unknown,
   breadcrumb?: boolean,
   children?: IRoute[]
+  isMenu?: boolean
 }
 
 export const routes: IRoute[] = [
@@ -11,15 +12,16 @@ export const routes: IRoute[] = [
     name: '日程',
     key: 'schedule',
     breadcrumb: true,
+    isMenu: true,
     children: [
       {
         name: '创建日程',
-        key: 'schedule/new-schedule',
-        breadcrumb: true
+        key: 'schedule/add-schedule',
+        breadcrumb: true,
       },
       {
-        name: '创建日程',
-        key: 'schedule/new-schedules',
+        name: '修改日程',
+        key: 'schedule/add-schedule',
         breadcrumb: true
       }
     ]
@@ -27,11 +29,13 @@ export const routes: IRoute[] = [
   {
     name: '日历',
     key: 'calendar',
-    breadcrumb: true
+    breadcrumb: true,
+    isMenu: true,
   },
   {
     name: '统计',
     key: 'statics',
-    breadcrumb: true
+    breadcrumb: true,
+    isMenu: true
   }
 ]

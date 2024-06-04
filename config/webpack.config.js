@@ -560,7 +560,14 @@ module.exports = function (webpackEnv) {
                     : isEnvDevelopment,
                 },
                 'less-loader'
-              ),
+              ).concat([{
+                loader: 'style-resources-loader',
+                options: {
+                  patterns: [
+                    path.resolve(__dirname, '../src/index.less')
+                  ]
+                }
+              }]),
               sideEffects: true,
             },
             {
@@ -572,8 +579,15 @@ module.exports = function (webpackEnv) {
                     ? shouldUseSourceMap
                     : isEnvDevelopment,
                 },
-                'sass-loader'
-              ),
+                'less-loader'
+              ).concat([{
+                loader: 'style-resources-loader',
+                options: {
+                  patterns: [
+                    path.resolve(__dirname, '../src/index.less')
+                  ]
+                }
+              }]),
               sideEffects: true,
             },
             // "file" loader makes sure those assets get served by WebpackDevServer.

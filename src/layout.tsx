@@ -29,6 +29,7 @@ const icons = [
 function getMenu(routes: IRoute[]) {
   const res = []
   function travel(route) {
+    if(!route.isMenu) return 
     const menuItem: menu = {
       key: route.key,
       label: route.name
@@ -39,13 +40,20 @@ function getMenu(routes: IRoute[]) {
     if (route.children) {
       menuItem.children = []
       route.children.forEach((r) => {
-        menuItem.children?.push(travel(r))
+        const child = travel(r)
+        if(child) {
+          menuItem.children?.push(child)
+        }
       })
       return menuItem
     }
   }
   routes.forEach((route, index) => {
     const menuitem = travel(route)
+    if (menuitem.children?.length === 0) {
+      delete menuitem.children
+    }
+
     menuitem.icon = icons[index].icon
     res.push(menuitem)
   })
@@ -140,7 +148,7 @@ function PageLayout() {
         <Content
           style={{
             margin: '20px 16px',
-            padding: 24,
+            padding: 10,
             background: colorBgContainer,
             borderRadius: borderRadiusLG
           }}
