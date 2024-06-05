@@ -6,7 +6,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import locale from 'antd/locale/zh_CN'
 import 'dayjs/locale/zh-cn'
 import dayjs from 'dayjs'
-import {addSchedule } from '../../../store/schedule'
+import { addSchedule, updateSchedule } from '../../../store/schedule'
 import { useAppDispatch, useAppSelector } from '../../../store/hooks'
 
 interface schedule {
@@ -15,7 +15,7 @@ interface schedule {
   remark: string
   status: string
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  time?: any
+  time: any
 }
 
 // 日期时间选择组件的中文以及不可选设置
@@ -36,11 +36,10 @@ function NewSchedule() {
   const dispatch = useAppDispatch()
   const [params] = useSearchParams()
   const key = params.getAll('key')[0]
+
   useEffect(() => {
-    console.log(key)
     if (key) {
       const foundSchedule = scheduleTable.find(s => s.key === params.getAll('key')[0])
-      console.log(foundSchedule)
       formRef.current.setFieldsValue({schedule: foundSchedule.schedule, remark: foundSchedule.remark, time: foundSchedule.time})
       setAddOrUpdate('编辑')
     } else {
@@ -72,7 +71,12 @@ function NewSchedule() {
       scheduleItem.timeLeft = `${days}天`
     }
 
-    dispatch(addSchedule(scheduleItem))
+    if (key) {
+      dispatch(updateSchedule({...scheduleItem, key}))
+    } else {
+      dispatch(addSchedule(scheduleItem))
+    }
+
     navigate('/schedule')
   }
   return (

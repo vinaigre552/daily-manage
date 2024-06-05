@@ -6,7 +6,10 @@ const store = configureStore({
   reducer: {
     user: userReducer,
     schedule: scheduleReducer
-  }
+  },
+  middleware: getDefaultMiddleware => getDefaultMiddleware({
+    serializableCheck: false
+  })
 })
 
 export type RootState = ReturnType<typeof store.getState>

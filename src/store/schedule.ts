@@ -9,12 +9,10 @@ interface scheduleType extends scheduleStatus {
   schedule: string
   timeLeft: string
   remark: string
-  time: never
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  time: any
 }
 
-// interface preschedule  extends scheduleStatus{
-//   id: string
-// }
 
 const scheduleData = [
   {
@@ -58,6 +56,7 @@ export const schedule = createSlice({
       reducer: (state, action:PayloadAction<scheduleType>) => {
         state.scheduleData.push(action.payload)
       },
+      // 使用prepare的时候，需要在reducer中明确指定payload类型,否则会报错
       prepare: (scheduleItem) => {
         return {
           payload: {
@@ -67,28 +66,15 @@ export const schedule = createSlice({
         }
       }
     },
+    updateSchedule(state, action:PayloadAction<scheduleType>) {
+      const index = state.scheduleData.findIndex(s => action.payload.key === s.key)
+      state.scheduleData[index] = action.payload
+    },
     deleteSchedule(state, action:PayloadAction<string>) {
       const index = state.scheduleData.findIndex(schedule => schedule.key === action.payload)
       index !== -1 && state.scheduleData.splice(index, 1)
     },
-    // handleSchedule: {
-    //   reducer: (state, action: PayloadAction<preschedule>) => {
-    //     const { id, key, status } = action.payload
-    //     console.log(id)
-    //     const schedule = state.scheduleData.find(schedule => schedule.key === key)
-    //     schedule && (schedule.status = status)
-    //   }, 
-    //   // 使用prepare的时候，需要在reducer中明确指定payload类型,否则会报错
-    //   prepare: (key, status) => { 
-    //     return {
-    //       payload: {
-    //         id: nanoid(),
-    //         key,
-    //         status
-    //       }
-    //     }
-    //   }
-    // },
+
     handleScheduleStatus(state, action: PayloadAction<scheduleStatus>) {
       const { key, status } = action.payload
       const schedule = state.scheduleData.find(schedule => schedule.key === key)
@@ -104,5 +90,5 @@ export const schedule = createSlice({
   // }
 })
 
-export const { addSchedule, deleteSchedule, handleScheduleStatus} = schedule.actions
+export const { addSchedule, deleteSchedule, handleScheduleStatus, updateSchedule} = schedule.actions
 export default schedule.reducer
