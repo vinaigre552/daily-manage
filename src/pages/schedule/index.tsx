@@ -83,7 +83,7 @@ function Schedule() {
             className={styles['btn']}
             size={size}
             icon={<EditOutlined />}
-            onClick={() => navigate(`/schedule/add-schedule?key=${record.key}`)}
+            onClick={() => navigate(`/schedule/schedule-info?key=${record.key}`)}
           />
           <Button
             shape="circle"
@@ -99,7 +99,7 @@ function Schedule() {
   return (
     <div>
       <Button type="primary" size="middle" className={styles['add-btn']}>
-        <Link to={'/schedule/add-schedule'}>新建日程📅</Link>
+        <Link to={'/schedule/schedule-info'}>新建日程📅</Link>
       </Button>
       <Table
         columns={columns}

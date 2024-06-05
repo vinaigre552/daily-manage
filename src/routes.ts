@@ -16,12 +16,12 @@ export const routes: IRoute[] = [
     children: [
       {
         name: '创建日程',
-        key: 'schedule/add-schedule',
+        key: 'schedule/schedule-info',
         breadcrumb: true,
       },
       {
         name: '修改日程',
-        key: 'schedule/add-schedule',
+        key: 'schedule/schedule-info',
         breadcrumb: true
       }
     ]

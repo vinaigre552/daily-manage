@@ -50,7 +50,7 @@ function NewSchedule() {
   function backToLastPage() {
     navigate(-1)
   }
-  function addOneSchedule(values) {
+  function handleSchedule(values) {
     const scheduleItem: schedule  = {
       schedule: values.schedule,
       timeLeft: '',
@@ -63,12 +63,14 @@ function NewSchedule() {
     const minutes = dayjs(values.time[1]).diff(dayjs(new Date()), 'minute')
     if ( 0 < minutes && minutes < 60) {
       scheduleItem.timeLeft = `${minutes}分钟`
-    } else if (minutes < 1440) {
+    } else if (minutes < 1440 && minutes >= 60) {
       const hours = dayjs(values.time[1]).diff(dayjs(new Date()), 'hour')
       scheduleItem.timeLeft = `${hours}小时`
-    } else {
+    } else if (minutes >= 1440){
       const days = dayjs(values.time[1]).diff(dayjs(new Date()), 'day')
       scheduleItem.timeLeft = `${days}天`
+    } else {
+      scheduleItem.status = '过期未完成'
     }
 
     if (key) {
@@ -82,7 +84,7 @@ function NewSchedule() {
   return (
     <div className={styles['schedule-info']}>
       <span className={styles['schedule-form-title']}>{addOrUpdate}日程</span>
-      <Form layout="vertical" onFinish={addOneSchedule} ref={formRef}>
+      <Form layout="vertical" onFinish={handleSchedule} ref={formRef}>
         <Form.Item
           label="日程："
           name="schedule"
