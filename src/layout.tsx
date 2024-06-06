@@ -29,7 +29,6 @@ const icons = [
 function getMenu(routes: IRoute[]) {
   const res = []
   function travel(route) {
-    if(!route.isMenu) return 
     const menuItem: menu = {
       key: route.key,
       label: route.name
@@ -41,7 +40,7 @@ function getMenu(routes: IRoute[]) {
       menuItem.children = []
       route.children.forEach((r) => {
         const child = travel(r)
-        if(child) {
+        if (child) {
           menuItem.children?.push(child)
         }
       })
@@ -49,13 +48,15 @@ function getMenu(routes: IRoute[]) {
     }
   }
   routes.forEach((route, index) => {
-    const menuitem = travel(route)
-    if (menuitem.children?.length === 0) {
-      delete menuitem.children
-    }
+    if (route.isMenu) {
+      const menuitem = travel(route)
+      if (menuitem.children?.length === 0) {
+        delete menuitem.children
+      }
 
-    menuitem.icon = icons[index].icon
-    res.push(menuitem)
+      menuitem.icon = icons[index].icon
+      res.push(menuitem)
+    }
   })
   return res
 }
@@ -66,7 +67,11 @@ function getRoutes(routes: IRoute[]) {
   function travel(_routes) {
     _routes.forEach((route) => {
       route.element = (
-        <LazyImportComponent lazyChildren={React.lazy(() => import(`./pages/${route.key}`))} />
+        <LazyImportComponent
+          lazyChildren={React.lazy(
+            () => import(`./pages/${route.key === '' ? 'home' : route.key}`)
+          )}
+        />
       )
       res.push(route)
       if (route.children) {
@@ -143,7 +148,11 @@ function PageLayout() {
 
       <Layout>
         <Header style={{ padding: 0, background: colorBgContainer, height: '60px' }}>
-          <HeaderLine breadItems={breadcrumbItems} collapsed={collapsed} setCollapsed={setCollapsed} />
+          <HeaderLine
+            breadItems={breadcrumbItems}
+            collapsed={collapsed}
+            setCollapsed={setCollapsed}
+          />
         </Header>
         <Content
           style={{

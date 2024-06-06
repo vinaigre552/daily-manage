@@ -37,5 +37,10 @@ export const routes: IRoute[] = [
     key: 'statics',
     breadcrumb: true,
     isMenu: true
+  },
+  {
+    name: '首页',
+    key: '',
+    isMenu: false
   }
 ]
