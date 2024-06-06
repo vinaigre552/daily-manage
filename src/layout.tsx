@@ -147,7 +147,7 @@ function PageLayout() {
         </Header>
         <Content
           style={{
-            margin: '20px 16px',
+            margin: '20px 16px 0',
             padding: 10,
             background: colorBgContainer,
             borderRadius: borderRadiusLG

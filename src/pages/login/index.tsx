@@ -11,10 +11,10 @@ export default function Login() {
     <div className={styles['login-page']}>
       <Layout>
         <Sider width='300px' className={styles['display']}>
-          <LoginDisplay></LoginDisplay>
+          <LoginDisplay /> 
         </Sider>
         <Content className={styles['login-form']}>
-          <LoginForm></LoginForm>
+          <LoginForm />
         </Content>
       </Layout>
     </div>
