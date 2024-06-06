@@ -26,7 +26,9 @@ export default function LoginForm() {
   const onLogin: FormProps<FieldType>['onFinish'] = (userInfo) => {
     dispatch(setUsername(userInfo.username))
     message.success('登录成功！')
-    navigate('/')
+    
+    // 登录到首页后保证回退不会再回到登录页
+    navigate('/', {replace: true})
   }
   return (
     <div className={styles['login-div']}>

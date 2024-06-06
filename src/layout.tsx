@@ -29,6 +29,7 @@ const icons = [
 function getMenu(routes: IRoute[]) {
   const res = []
   function travel(route) {
+    if (!route.isMenu) return 
     const menuItem: menu = {
       key: route.key,
       label: route.name
