@@ -39,7 +39,7 @@ function NewSchedule() {
 
   useEffect(() => {
     if (key) {
-      const foundSchedule = scheduleTable.find(s => s.key === params.getAll('key')[0])
+      const foundSchedule = scheduleTable.find(s => s.key === key)
       formRef.current.setFieldsValue({schedule: foundSchedule.schedule, remark: foundSchedule.remark, time: foundSchedule.time})
       setAddOrUpdate('编辑')
     } else {
