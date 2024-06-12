@@ -1,17 +1,23 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
+interface user {
+  id: number,
+  name: string
+}
+
 export const useInfo = createSlice({
   name: 'user',
   initialState: {
-    id: 1,
+    id: 0,
     name: 'admin'
   },
   reducers: {
-    setUsername: (state, action: PayloadAction<string>) => {
-      state.name = action.payload
+    setCurrentUser: (state, action: PayloadAction<user>) => {
+      state.name = action.payload.name
+      state.id = action.payload.id
     }
   }
 })
 
-export const { setUsername } = useInfo.actions
+export const { setCurrentUser } = useInfo.actions
 export default useInfo.reducer

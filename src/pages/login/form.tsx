@@ -4,7 +4,7 @@ import { Button, Form, Input, Checkbox } from 'antd'
 import styles from './style/login.module.less'
 import { useNavigate } from 'react-router-dom'
 import { useAppDispatch } from '../../store/hooks'
-import { setUsername } from '../../store/user'
+import { setCurrentUser } from '../../store/user'
 import { message } from 'antd'
 
 type FieldType = {
@@ -20,15 +20,31 @@ const defaultUser = {
 }
 
 export default function LoginForm() {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
 
   const onLogin: FormProps<FieldType>['onFinish'] = (userInfo) => {
-    dispatch(setUsername(userInfo.username))
-    message.success('登录成功！')
-    
-    // 登录到首页后保证回退不会再回到登录页
-    navigate('/', {replace: true})
+    fetch('/user/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(userInfo)
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.code === 200) {
+          message.success(data.msg)
+
+          dispatch(setCurrentUser({'name': userInfo.username, 'id': data.data}))
+          // 登录到首页后保证回退不会再回到登录页
+          navigate('/', { replace: true })
+        } else {
+          message.error(data.msg)
+        }
+      })
+      .catch((error) => console.log(error))
   }
   return (
     <div className={styles['login-div']}>
@@ -47,6 +63,7 @@ export default function LoginForm() {
         >
           <Input placeholder="请输入用户名"></Input>
         </Form.Item>
+
         <Form.Item<FieldType>
           label="密码"
           name="password"
@@ -54,6 +71,7 @@ export default function LoginForm() {
         >
           <Input.Password placeholder="请输入密码" />
         </Form.Item>
+
         <Form.Item<FieldType>
           name="remember"
           valuePropName="checked"
@@ -61,6 +79,7 @@ export default function LoginForm() {
         >
           <Checkbox>记住我</Checkbox>
         </Form.Item>
+
         <Form.Item wrapperCol={{ offset: 4, span: 16 }}>
           <Button type="primary" htmlType="submit">
             登录

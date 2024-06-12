@@ -235,6 +235,15 @@ module.exports = function (webpackEnv) {
         : isEnvDevelopment &&
           (info => path.resolve(info.absoluteResourcePath).replace(/\\/g, '/')),
     },
+    // devServer: {
+    //   proxy: {
+    //     '/api': {
+    //       target: 'http://localhost:8081',
+    //       pathRewrite: {'^/api' : ''},
+    //       changeOrigin: true
+    //     }
+    //   }
+    // },
     cache: {
       type: 'filesystem',
       version: createEnvironmentHash(env.raw),
