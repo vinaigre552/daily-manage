@@ -9,7 +9,6 @@ interface scheduleType extends scheduleStatus {
   schedule: string
   timeLeft: string
   remark: string
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   time: any
 }
 

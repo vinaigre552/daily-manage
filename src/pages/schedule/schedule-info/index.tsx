@@ -14,7 +14,6 @@ interface schedule {
   timeLeft: string
   remark: string
   status: string
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   time: any
 }
 

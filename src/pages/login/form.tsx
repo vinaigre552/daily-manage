@@ -4,8 +4,10 @@ import { Button, Form, Input, Checkbox } from 'antd'
 import styles from './style/login.module.less'
 import { useNavigate } from 'react-router-dom'
 import { useAppDispatch } from '../../store/hooks'
+import isRequestSuccess from '../../api/response'
 import { setCurrentUser } from '../../store/user'
 import { message } from 'antd'
+import apis from '../../api'
 
 type FieldType = {
   username?: string
@@ -20,32 +22,22 @@ const defaultUser = {
 }
 
 export default function LoginForm() {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
 
-  const onLogin: FormProps<FieldType>['onFinish'] = (userInfo) => {
-    fetch('/user/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(userInfo)
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.code === 200) {
-          message.success(data.msg)
+  const onLogin: FormProps<FieldType>['onFinish'] = async (userInfo) => {
+    const res = await apis.user_apis.login(userInfo)
 
-          dispatch(setCurrentUser({'name': userInfo.username, 'id': data.data}))
-          // 登录到首页后保证回退不会再回到登录页
-          navigate('/', { replace: true })
-        } else {
-          message.error(data.msg)
-        }
-      })
-      .catch((error) => console.log(error))
+    if (isRequestSuccess(res)) {
+      message.success(res.msg)
+
+      dispatch(setCurrentUser({'name': userInfo.username, 'id': res.data}))
+
+      // 登录到首页后保证回退不会再回到登录页
+      navigate('/', { replace: true })
+    }
   }
+  
   return (
     <div className={styles['login-div']}>
       <Form
