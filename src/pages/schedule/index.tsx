@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Button, Table, Tag } from 'antd'
 import type { TableProps } from 'antd'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
@@ -14,6 +14,8 @@ import styles from './style/index.module.less'
 import { deleteSchedule, handleScheduleStatus } from '../../store/schedule'
 import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
+import apis from '../../api'
+import isRequestSuccess from '../../api/response'
 
 const size = 'small' // 按钮大小
 enum StatusTag { // 状态tag颜色
@@ -34,6 +36,17 @@ interface DataType {
 function Schedule() {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
+
+  async function getSchedules (){
+    const res = await apis.schedule_apis.getScheduleList()
+
+    if (isRequestSuccess(res)) {
+      console.log(res)
+    }
+  }
+
+  useEffect(() => {getSchedules()}, [])
+  
 
   const columns: TableProps<DataType>['columns'] = [
     {

@@ -1,10 +1,15 @@
 import axios from 'axios'
+import { message } from 'antd'
 const instance = axios.create({
   timeout: 1000 * 60 * 5
 })
 
 
 instance.interceptors.request.use((config) => {
+  const token = window.localStorage.getItem('token')
+  if (token) {
+    config.headers['Authorization'] = token
+  }
   return config
 })
 
@@ -18,6 +23,13 @@ instance.interceptors.response.use(
       switch (err.response.status) {
         case 400:
           err.message = ''
+          break
+        case 401: // token过期，退出登录
+          message.error(err.response.data.msg)
+          localStorage.removeItem('token')
+          setTimeout(() => {
+            window.location.href = '/login'
+          }, 500)
           break
         case 403:
           err.message = '权限不足: 403'

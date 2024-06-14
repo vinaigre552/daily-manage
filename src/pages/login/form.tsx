@@ -31,8 +31,8 @@ export default function LoginForm() {
     if (isRequestSuccess(res)) {
       message.success(res.msg)
 
-      dispatch(setCurrentUser({'name': userInfo.username, 'id': res.data}))
-
+      dispatch(setCurrentUser({'name': userInfo.username, 'id': res.data.id}))
+      window.localStorage.setItem('token', res.data.token)
       // 登录到首页后保证回退不会再回到登录页
       navigate('/', { replace: true })
     }
