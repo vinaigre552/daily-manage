@@ -8,7 +8,9 @@ import 'dayjs/locale/zh-cn'
 import dayjs from 'dayjs'
 import { addSchedule, updateSchedule } from '../../../store/schedule'
 import { useAppDispatch, useAppSelector } from '../../../store/hooks'
-
+import apis from '../../../api'
+import isRequestSuccess from '../../../api/response'
+import { message } from 'antd'
 interface schedule {
   schedule: string
   timeLeft: string
@@ -28,8 +30,8 @@ const disabledDate: RangePickerProps['disabledDate'] = (current) => {
 
 function NewSchedule() {
   const [addOrUpdate, setAddOrUpdate] = useState('新建')
-  const scheduleTable = useAppSelector(state => state.schedule.scheduleData)
- 
+  const scheduleTable = useAppSelector((state) => state.schedule.scheduleData)
+
   const formRef = useRef(null)
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
@@ -38,8 +40,12 @@ function NewSchedule() {
 
   useEffect(() => {
     if (key) {
-      const foundSchedule = scheduleTable.find(s => s.key === key)
-      formRef.current.setFieldsValue({schedule: foundSchedule.schedule, remark: foundSchedule.remark, time: foundSchedule.time})
+      const foundSchedule = scheduleTable.find((s) => s.key === key)
+      formRef.current.setFieldsValue({
+        schedule: foundSchedule.schedule,
+        remark: foundSchedule.remark,
+        time: foundSchedule.time
+      })
       setAddOrUpdate('编辑')
     } else {
       setAddOrUpdate('新建')
@@ -49,31 +55,42 @@ function NewSchedule() {
   function backToLastPage() {
     navigate(-1)
   }
-  function handleSchedule(values) {
-    const scheduleItem: schedule  = {
+  async function handleSchedule(values) {
+    const scheduleItem: schedule = {
       schedule: values.schedule,
       timeLeft: '',
       remark: values.remark,
       status: '进行中',
       time: values.time
     }
-
     // 剩余时间的计算和显示
     const minutes = dayjs(values.time[1]).diff(dayjs(new Date()), 'minute')
-    if ( 0 < minutes && minutes < 60) {
+    if (0 < minutes && minutes < 60) {
       scheduleItem.timeLeft = `${minutes}分钟`
     } else if (minutes < 1440 && minutes >= 60) {
       const hours = dayjs(values.time[1]).diff(dayjs(new Date()), 'hour')
       scheduleItem.timeLeft = `${hours}小时`
-    } else if (minutes >= 1440){
+    } else if (minutes >= 1440) {
       const days = dayjs(values.time[1]).diff(dayjs(new Date()), 'day')
       scheduleItem.timeLeft = `${days}天`
     } else {
       scheduleItem.status = '过期未完成'
     }
 
+    const res = await apis.schedule_apis.setSchedule({
+      name: values.schedule,
+      start_time: values.time[0],
+      end_time: values.time[1],
+      remark: values.remark,
+      status: minutes > 0 ? '进行中' : '过期未完成'
+    })
+
+    if (isRequestSuccess(res)) {
+      message.success('添加成功')
+    }
+
     if (key) {
-      dispatch(updateSchedule({...scheduleItem, key}))
+      dispatch(updateSchedule({ ...scheduleItem, key }))
     } else {
       dispatch(addSchedule(scheduleItem))
     }

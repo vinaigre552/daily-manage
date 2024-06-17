@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react'
-import { Button, Table, Tag } from 'antd'
+import React, { useEffect, useState } from 'react'
+import { Button, Table, Tag, ConfigProvider } from 'antd'
 import type { TableProps } from 'antd'
-import { useAppDispatch, useAppSelector } from '../../store/hooks'
+import { useAppDispatch } from '../../store/hooks'
 import {
   CheckOutlined,
   PauseOutlined,
@@ -16,6 +16,8 @@ import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 import apis from '../../api'
 import isRequestSuccess from '../../api/response'
+import moment from 'moment'
+import zhCN from 'antd/es/locale/zh_CN'
 
 const size = 'small' // 按钮大小
 enum StatusTag { // 状态tag颜色
@@ -28,7 +30,7 @@ enum StatusTag { // 状态tag颜色
 interface DataType {
   key: string
   schedule: string
-  timeLeft: string
+  start_time: string
   remark: string
   status: string
 }
@@ -36,28 +38,59 @@ interface DataType {
 function Schedule() {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
+  const [scheduleList, setScheduleList] = useState([])
 
-  async function getSchedules (){
-    const res = await apis.schedule_apis.getScheduleList()
+  const [page, setPage] = useState({ pageNum: 1, pageSize: 10 })
+  const [total, setTotal] = useState(0)
+
+  // 分页
+  function changePage(currentPage, pageSize) {
+    setPage({ pageNum: currentPage, pageSize: pageSize })
+  }
+
+  async function getSchedules() {
+    const res = await apis.schedule_apis.getScheduleList({
+      pageNum: page.pageNum,
+      pageSize: page.pageSize
+    })
 
     if (isRequestSuccess(res)) {
-      console.log(res)
+      setScheduleList(
+        res.data.data.map((item) => {
+          item.key = item.id
+          return item
+        })
+      )
+      setTotal(res.data.total)
     }
   }
 
-  useEffect(() => {getSchedules()}, [])
-  
+  useEffect(() => {
+    getSchedules()
+  }, [page])
 
   const columns: TableProps<DataType>['columns'] = [
     {
       title: '日程',
-      dataIndex: 'schedule',
-      key: 'schedule'
+      dataIndex: 'name',
+      key: 'name'
+    },
+    {
+      title: '开始时间',
+      dataIndex: 'start_time',
+      key: 'start_time',
+      render: (_, record) => <span>{moment(record.start_time).format('YYYY-MM-DD HH:DD:MM')}</span>
+    },
+    {
+      title: '结束时间',
+      dataIndex: 'end_time',
+      key: 'end_time',
+      render: (_, record) => <span>{moment(record.start_time).format('YYYY-MM-DD HH:DD:MM')}</span>
     },
     {
       title: '剩余时间',
-      dataIndex: 'timeLeft',
-      key: 'timeLeft'
+      dataIndex: 'end_time',
+      key: 'end_time'
     },
     {
       title: '备注',
@@ -109,15 +142,28 @@ function Schedule() {
       )
     }
   ]
+
   return (
     <div>
       <Button type="primary" size="middle" className={styles['add-btn']}>
         <Link to={'/schedule/schedule-info'}>新建日程📅</Link>
       </Button>
-      <Table
-        columns={columns}
-        dataSource={useAppSelector((state) => state.schedule.scheduleData)}
-      ></Table>
+
+      <ConfigProvider locale={zhCN}>
+        <Table
+          columns={columns}
+          dataSource={scheduleList}
+          pagination={{
+            showSizeChanger: true,
+            showTotal: () => `共${total}条`,
+            pageSize: page.pageSize,
+            current: page.pageNum,
+            total: total,
+            onChange: (current: number, page: number) => changePage(current, page),
+            position: ['bottomCenter']
+          }}
+        ></Table>
+      </ConfigProvider>
     </div>
   )
 }

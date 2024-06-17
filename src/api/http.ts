@@ -13,7 +13,6 @@ const fetchData = <T = any> (url = '', data = {}, method = 'GET') => {
       http[m](url, data)
         .then((response) => {
           const responseData = response.data as ResData<T> 
-          console.log(responseData)
           resolve(responseData)
         })
         .catch((err) => {
