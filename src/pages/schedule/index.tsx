@@ -11,7 +11,7 @@ import {
   PauseCircleFilled
 } from '@ant-design/icons'
 import styles from './style/index.module.less'
-import { deleteSchedule, handleScheduleStatus } from '../../store/schedule'
+import { deleteSchedule } from '../../store/schedule'
 import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 import apis from '../../api'
@@ -63,6 +63,15 @@ function Schedule() {
     getSchedules()
   }, [page])
 
+  async function handleScheduleStatus (id: string, oldStatus:string, newStatus: string) {
+    if(oldStatus === newStatus || oldStatus === '已完成')  return 
+
+    const res = await apis.schedule_apis.updateScheduleStatus({id, status:newStatus})
+    if (isRequestSuccess(res)) {
+      getSchedules()
+    }
+  }
+
   const columns: TableProps<IScheduleInfo>['columns'] = [
     {
       title: '日程',
@@ -109,14 +118,14 @@ function Schedule() {
             style={record.status === '已完成' && { color: 'green' }}
             size={size}
             icon={record.status !== '已完成' ? <CheckOutlined /> : <CheckCircleFilled />}
-            onClick={() => dispatch(handleScheduleStatus({ key: record.key, status: '已完成' }))}
+            onClick={() => handleScheduleStatus(record.id, record.status, '已完成')}
           />
           <Button
             shape="circle"
             className={styles['btn']}
             size={size}
             icon={record.status !== '暂停' ? <PauseOutlined /> : <PauseCircleFilled />}
-            onClick={() => dispatch(handleScheduleStatus({ key: record.key, status: '暂停' }))}
+            onClick={() => handleScheduleStatus(record.id, record.status, '暂停')}
           />
           <Button
             shape="circle"

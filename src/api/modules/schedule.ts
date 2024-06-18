@@ -7,9 +7,11 @@ const schedule_apis = {
   // 添加新日程
   setSchedule: (data) => fetchData('/schedule/info', data, 'POST'),
   // 根据id获取日程
-  getOneSchedule: (id) => fetchData( `/schedule/info/${id}`, {}, 'POST'),
+  getOneSchedule: (id:number) => fetchData( `/schedule/info/${id}`, {}, 'POST'),
   // 更新日程
-  updateSchedule: (data) => fetchData('/schedule/info/update', data, 'POST')
+  updateSchedule: (data) => fetchData('/schedule/info/update', data, 'POST'),
+  // 更新状态
+  updateScheduleStatus: (data: {id: string, status: string}) => fetchData('/schedule/info/status', data, 'POST')
 }
 
 export default schedule_apis
