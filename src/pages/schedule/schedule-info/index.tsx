@@ -34,7 +34,7 @@ function NewSchedule() {
     if (isRequestSuccess(res)) {
       const scheduleInfo = res.data
       formRef.current.setFieldsValue({
-        schedule: scheduleInfo.name,
+        name: scheduleInfo.name,
         remark: scheduleInfo.remark,
         time: [dayjs(scheduleInfo.start_time), dayjs(scheduleInfo.end_time)] // 需要用dayjs转换格式，字符串类型会报错
       })

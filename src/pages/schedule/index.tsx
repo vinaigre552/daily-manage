@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Table, Tag, ConfigProvider } from 'antd'
+import { Button, Table, Tag, ConfigProvider, message } from 'antd'
 import type { TableProps } from 'antd'
-import { useAppDispatch } from '../../store/hooks'
 import {
   CheckOutlined,
   PauseOutlined,
@@ -11,7 +10,6 @@ import {
   PauseCircleFilled
 } from '@ant-design/icons'
 import styles from './style/index.module.less'
-import { deleteSchedule } from '../../store/schedule'
 import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 import apis from '../../api'
@@ -29,7 +27,6 @@ enum StatusTag { // 状态tag颜色
 }
 
 function Schedule() {
-  const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const [scheduleList, setScheduleList] = useState([])
 
@@ -62,6 +59,7 @@ function Schedule() {
     getSchedules()
   }, [page])
 
+  // 改变日程状态
   async function handleScheduleStatus (id: string, oldStatus:string, newStatus: string) {
     if(oldStatus === newStatus || oldStatus === '已完成')  return 
 
@@ -69,6 +67,16 @@ function Schedule() {
     if (isRequestSuccess(res)) {
       getSchedules()
     }
+  }
+
+  // 删除日程
+  async function deleteSchedule(id: string) {
+    const res = await apis.schedule_apis.deleteSchedule(id)
+    if (isRequestSuccess(res)) {
+      message.success(res.msg)
+      getSchedules()
+    }
+    
   }
 
   const columns: TableProps<IScheduleInfo>['columns'] = [
@@ -138,7 +146,7 @@ function Schedule() {
             className={styles['btn']}
             size={size}
             icon={<DeleteOutlined />}
-            onClick={() => dispatch(deleteSchedule(record.key))}
+            onClick={() => deleteSchedule(record.id)}
           />
         </>
       )
