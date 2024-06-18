@@ -19,6 +19,7 @@ import isRequestSuccess from '../../api/response'
 import moment from 'moment'
 import zhCN from 'antd/es/locale/zh_CN'
 import { IScheduleInfo } from './types'
+
 const size = 'small' // 按钮大小
 enum StatusTag { // 状态tag颜色
   '已完成' = 'green',
@@ -26,8 +27,6 @@ enum StatusTag { // 状态tag颜色
   '暂停' = 'purple',
   '过期未完成' = 'gray'
 }
-
-
 
 function Schedule() {
   const dispatch = useAppDispatch()
