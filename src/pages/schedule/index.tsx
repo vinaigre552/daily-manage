@@ -18,7 +18,7 @@ import apis from '../../api'
 import isRequestSuccess from '../../api/response'
 import moment from 'moment'
 import zhCN from 'antd/es/locale/zh_CN'
-
+import { IScheduleInfo } from './types'
 const size = 'small' // 按钮大小
 enum StatusTag { // 状态tag颜色
   '已完成' = 'green',
@@ -27,13 +27,7 @@ enum StatusTag { // 状态tag颜色
   '过期未完成' = 'gray'
 }
 
-interface DataType {
-  key: string
-  schedule: string
-  start_time: string
-  remark: string
-  status: string
-}
+
 
 function Schedule() {
   const dispatch = useAppDispatch()
@@ -44,7 +38,7 @@ function Schedule() {
   const [total, setTotal] = useState(0)
 
   // 分页
-  function changePage(currentPage, pageSize) {
+  function changePage(currentPage:number, pageSize:number) {
     setPage({ pageNum: currentPage, pageSize: pageSize })
   }
 
@@ -56,7 +50,7 @@ function Schedule() {
 
     if (isRequestSuccess(res)) {
       setScheduleList(
-        res.data.data.map((item) => {
+        res.data.data.map((item:IScheduleInfo) => {
           item.key = item.id
           return item
         })
@@ -69,7 +63,7 @@ function Schedule() {
     getSchedules()
   }, [page])
 
-  const columns: TableProps<DataType>['columns'] = [
+  const columns: TableProps<IScheduleInfo>['columns'] = [
     {
       title: '日程',
       dataIndex: 'name',
@@ -85,7 +79,7 @@ function Schedule() {
       title: '结束时间',
       dataIndex: 'end_time',
       key: 'end_time',
-      render: (_, record) => <span>{moment(record.start_time).format('YYYY-MM-DD HH:DD:MM')}</span>
+      render: (_, record) => <span>{moment(record.end_time).format('YYYY-MM-DD HH:DD:MM')}</span>
     },
     {
       title: '剩余时间',
