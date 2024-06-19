@@ -29,6 +29,7 @@ function NewSchedule() {
   const [params] = useSearchParams()
   const key = params.get('key')
 
+  // 编辑状态获取日程信息
   async function getScheduleInfoById(id:number) {
     const res = await apis.schedule_apis.getOneSchedule(id)
     if (isRequestSuccess(res)) {
@@ -40,6 +41,7 @@ function NewSchedule() {
       })
     }
   }
+
   useEffect(() => {
     if (key) {
       getScheduleInfoById(parseInt(key))
@@ -53,7 +55,9 @@ function NewSchedule() {
   function backToLastPage() {
     navigate(-1)
   }
-  async function handleSchedule(values:IScheduleForm) {
+
+  // 日程新增和更新
+  async function addUpdateSchedule(values:IScheduleForm) {
     // 剩余时间的计算和显示
     const minutes = dayjs(values.time[1]).diff(dayjs(new Date()), 'minute')
 
@@ -85,7 +89,7 @@ function NewSchedule() {
   return (
     <div className={styles['schedule-info']}>
       <span className={styles['schedule-form-title']}>{addOrUpdate}日程</span>
-      <Form layout="vertical" onFinish={handleSchedule} ref={formRef}>
+      <Form layout="vertical" onFinish={addUpdateSchedule} ref={formRef}>
         <Form.Item
           label="日程："
           name="name"
