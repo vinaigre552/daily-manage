@@ -1,6 +1,7 @@
 export interface IScheduleInfo {
   id?: string
   key?: string
+  time_left: number | string
   end_time: string
   name: string
   start_time: string

@@ -76,7 +76,21 @@ function Schedule() {
       message.success(res.msg)
       getSchedules()
     }
-    
+  }
+
+  // 处理剩余时间
+  function handleTimeLeft(time: string) {
+    if (!time) return 0
+    const timeLeft = parseInt(time)
+    if (timeLeft < 0) {
+      return 0
+    } else if (timeLeft < 60) {
+      return timeLeft + '分钟'
+    } else if (timeLeft >=60 && timeLeft < 1440) {
+      return Math.floor(timeLeft / 60) + '小时'
+    } else {
+      return Math.floor(timeLeft / 1440) + '天'
+    }
   }
 
   const columns: TableProps<IScheduleInfo>['columns'] = [
@@ -99,8 +113,9 @@ function Schedule() {
     },
     {
       title: '剩余时间',
-      dataIndex: 'end_time',
-      key: 'end_time'
+      dataIndex: 'time_left',
+      key: 'time_left',
+      render: (_, record) => <span>{handleTimeLeft(record.time_left as string)}</span>
     },
     {
       title: '备注',

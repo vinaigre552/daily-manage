@@ -62,6 +62,7 @@ function NewSchedule() {
       start_time: values.time[0],
       end_time: values.time[1],
       remark: values.remark,
+      time_left: minutes,
       status: minutes > 0 ? '进行中' : '过期未完成'
     }
 
